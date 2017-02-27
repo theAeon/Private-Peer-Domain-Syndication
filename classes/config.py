@@ -36,7 +36,6 @@ class Configuration:
     def makerepofolders(self):
         if not os.path.exists('repos'):
             os.mkdir('repos')
-        os.chdir('repos')
         for entry in self.repositories:
             if not os.path.exists('repos/%s/' % entry):
                 os.makedirs('repos/%s/' % entry)
