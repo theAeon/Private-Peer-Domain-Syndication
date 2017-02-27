@@ -2,14 +2,14 @@ import sys, json, os
 
 class Configuration:
     def __init__(self):
-        print("init")
         self.repositories = []
         self.platform = ''
         self.hostfile = ''
+        self.patchlocation = 'hosts.patch'
+        self.defaultdomain = 'repo.ppds.me'
     def printdict(self):
         print(self.__dict__)
     def autoconfig(self):
-        print(sys.platform)
         self.platform = sys.platform
         if self.platform == 'darwin' or 'linux2':
             self.hostfile = '/etc/hosts'
@@ -17,7 +17,7 @@ class Configuration:
             self.hostfile = '%SystemRoot%\System32\drivers\etc\hosts'
         else:
             self.hostfile = str(input("Enter Plaintext Hostfile Location: "))
-        self.repositories.append("ppds.rollcagetech.com")
+        self.repositories.append(self.defaultdomain)
     def save(self):
         if os.path.isfile('config.json'):
             return('exists')
@@ -32,4 +32,17 @@ class Configuration:
             self.__dict__ = json.load(f)
             f.close()
         else:
-            return ("No File")
+            return ('No File')
+    def makerepofolders(self):
+        if not os.path.exists('repos'):
+            os.mkdir('repos')
+        os.chdir('repos')
+        for entry in self.repositories:
+            if not os.path.exists('repos/%s/' % entry):
+                os.makedirs('repos/%s/' % entry)
+#class RepoConfig():
+    #def __init__(self,configuration):
+        #self.repositories = configuration.repositories
+    #def initrepositories():
+        #for repository in configuration:
+            ##insert csv download script here
