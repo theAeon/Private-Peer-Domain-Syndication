@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-import scripts.config
+import classes.config
 
-testconfig = scripts.config.Configuration()
+testconfig = classes.config.Configuration()
 
 testconfig.autoconfig()
 testconfig.makerepofolders()
