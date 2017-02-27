@@ -1,4 +1,4 @@
-import sys, json, os
+import sys, json, os, requests, unittest
 
 class Configuration:
     def __init__(self):
@@ -14,7 +14,7 @@ class Configuration:
         if self.platform == 'darwin' or 'linux2':
             self.hostfile = '/etc/hosts'
         elif self.platform == 'win32':
-            self.hostfile = '%SystemRoot%\System32\drivers\etc\hosts'
+            self.hostfile = '%\SystemRoot%\\System32\\drivers\\etc\\hosts'
         else:
             self.hostfile = str(input("Enter Plaintext Hostfile Location: "))
         self.repositories.append(self.defaultdomain)
@@ -39,6 +39,17 @@ class Configuration:
         for entry in self.repositories:
             if not os.path.exists('repos/%s/' % entry):
                 os.makedirs('repos/%s/' % entry)
+    def testrepo(self, repo):
+        try:
+            repourl = 'http://' + repo
+            r = requests.get("%s/ppdslists.csv" % repourl, allow_redirects=False)
+        except requests.exceptions.ConnectionError:
+            return('down')
+    def addrepo(self, repo):
+        if self.testrepo(repo) == 'down':
+            return "failure"
+        self.repositores.append(repo)
+        self.makerepofolders()
 #class RepoConfig():
     #def __init__(self,configuration):
         #self.repositories = configuration.repositories
