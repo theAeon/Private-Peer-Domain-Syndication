@@ -1,4 +1,4 @@
-import sys, json, os, requests, unittest
+import sys, json, os, requests
 
 class Configuration:
     def __init__(self):
@@ -20,12 +20,15 @@ class Configuration:
         self.repositories.append(self.defaultdomain)
     def save(self):
         if os.path.isfile('config.json'):
-            return('exists')
-        else:
-            f = open('config.json', 'w+')
-            json.dump(self.__dict__, f)
-            f.close()
-            return('created')
+            check = str(input('Overwrite config? (y/n): '))
+            if check == 'y':
+              os.remove('config.json')
+            else:
+                return 'cancelled'
+        f = open('config.json', 'w+')
+        json.dump(self.__dict__, f)
+        f.close()
+        return('created')
     def load(self):
         if os.path.isfile('config.json'):
             f = open('config.json', 'r+')
@@ -42,17 +45,19 @@ class Configuration:
     def testrepo(self, repo):
         try:
             repourl = 'http://' + repo
-            r = requests.get("%s/ppdslists.csv" % repourl, allow_redirects=False)
+            r = requests.get("%s/ppdslist.json" % repourl, allow_redirects=False)
         except requests.exceptions.ConnectionError:
-            return('down')
+            try:
+                repourl = 'https://' + repo
+                r = requests.get("%s/ppdslist.json" % repourl, allow_redirects=False)
+            except requests.exceptions.ConnectionError:
+                return('down')
     def addrepo(self, repo):
         if self.testrepo(repo) == 'down':
             return "failure"
-        self.repositores.append(repo)
+        self.repositories.append(repo)
         self.makerepofolders()
-#class RepoConfig():
-    #def __init__(self,configuration):
-        #self.repositories = configuration.repositories
-    #def initrepositories():
-        #for repository in configuration:
-            ##insert csv download script here
+        self.save()
+    def forceaddrepo(self, repo):
+        self.repositories.append(repo)
+        self.makerepofolders()

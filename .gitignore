@@ -93,5 +93,5 @@ ENV/
 # Rope project settings
 .ropeproject
 #custom
-scripts/config.json
+config.json
 repos/*
