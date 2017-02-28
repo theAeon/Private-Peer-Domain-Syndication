@@ -1,4 +1,4 @@
-import sys, json, os, requests, shutil, urllib3
+import sys, json, os, requests, shutil, classes.repository
 ##everything to do with configuration in a convenient class
 class Configuration:
     def __init__(self):
@@ -8,6 +8,7 @@ class Configuration:
         self.hostfile = ''
         self.patchlocation = 'hosts.patch'
         self.defaultdomain = 'repo.ppds.me'
+        self.repoobjectdict = {}
     def printdict(self):
         #debug
         print(self.__dict__)
@@ -28,7 +29,7 @@ class Configuration:
         if os.path.isfile('config.json'):
             check = str(input('Overwrite config? (y/n): '))
             if check == 'y':
-              os.remove('config.json')
+                os.remove('config.json')
             else:
                 return 'cancelled'
         f = open('config.json', 'w+')
@@ -81,3 +82,9 @@ class Configuration:
             shutil.rmtree('repos/%s/' % repo)
         else:
             return 'repo does not exist'
+    def initrepolist(self):
+        ##unload before saving or modifying please
+        for item in self.repositories:
+            self.repoobjectdict[item] = classes.repository.Repository(item)
+    def unloadrepolist(self):
+        self.repoobjectdict = {}

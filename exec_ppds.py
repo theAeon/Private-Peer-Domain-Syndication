@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import classes.config, classes.hostfilepatch
+import classes.config, classes.hostfilepatch, classes.repository
 
 testconfig = classes.config.Configuration()
 
@@ -9,9 +9,12 @@ testconfig.save()
 testconfig.load()
 testconfig.addrepo('ppds.rollcagetech.com')
 testconfig.forceaddrepo('ppds.rollcagetech.com')
-testconfig.removerepo('repo.ppds.me')
-if testconfig.testrepo('google.com/ppds.json') == 'down':
+if testconfig.testrepo('rollcagetech.com') == 'down':
     print ('down')
-patcher = classes.hostfilepatch.hostpatch(testconfig)
-
-patcher.loadjson()
+testconfig.initrepolist()
+testconfig.repoobjectdict['repo.ppds.me'].loadpackagelist()
+testconfig.repoobjectdict['repo.ppds.me'].enablepackage('main.json')
+testconfig.repoobjectdict['repo.ppds.me'].savepackagelist()
+testconfig.repoobjectdict['repo.ppds.me'].loadjson()
+testconfig.repoobjectdict['repo.ppds.me'].disablepackage('main.json')
+testconfig.repoobjectdict['repo.ppds.me'].loadjson()
