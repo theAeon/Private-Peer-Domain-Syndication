@@ -9,7 +9,7 @@ testconfig.save()
 testconfig.load()
 testconfig.addrepo('ppds.rollcagetech.com')
 testconfig.forceaddrepo('ppds.rollcagetech.com')
-if testconfig.testrepo('rollcagetech.com') == 'down':
+if testconfig.testrepo('ppds.rollcagetech.com') == 'down':
     print ('down')
 patcher = classes.hostfilepatch.hostpatch(testconfig)
 

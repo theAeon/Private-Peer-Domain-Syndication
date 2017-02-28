@@ -11,7 +11,7 @@ class Configuration:
         print(self.__dict__)
     def autoconfig(self):
         self.platform = sys.platform
-        if self.platform == 'darwin' or 'linux2':
+        if self.platform == 'darwin' or 'linux':
             self.hostfile = '/etc/hosts'
         elif self.platform == 'win32':
             self.hostfile = '%\SystemRoot%\\System32\\drivers\\etc\\hosts'
