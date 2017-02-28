@@ -29,11 +29,8 @@ class Repository:
         #load jsons to a nested dict to be parsed later
         for filename in os.listdir('repos/%s' % self.name):
             with open ('repos/%s/%s' % (self.name, filename), 'r+', ) as f:
-                if filename != ".DS_Store":
-                    if filename != "ppdslist.json":
-                        if self.packages[filename] == 'enabled':
-                            print ('repos/%s/%s' % (self.name, filename))
+                if (filename != ".DS_Store" and
+                    filename != "ppdslist.json" and
+                    self.packages[filename] == 'enabled'):
                             fileproduct = json.load(f)
                             self.hosts[filename] = fileproduct
-                            print(fileproduct)
-                            print(self.hosts)
