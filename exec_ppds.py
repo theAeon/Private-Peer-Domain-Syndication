@@ -10,7 +10,7 @@ testconfig.load()
 testconfig.addrepo('ppds.rollcagetech.com')
 testconfig.forceaddrepo('ppds.rollcagetech.com')
 testconfig.removerepo('repo.ppds.me')
-if testconfig.testrepo('ppds.rollcagetech.com') == 'down':
+if testconfig.testrepo('google.com/ppds.json') == 'down':
     print ('down')
 patcher = classes.hostfilepatch.hostpatch(testconfig)
 

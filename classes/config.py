@@ -1,4 +1,4 @@
-import sys, json, os, requests, shutil
+import sys, json, os, requests, shutil, urllib3
 ##everything to do with configuration in a convenient class
 class Configuration:
     def __init__(self):
@@ -55,12 +55,15 @@ class Configuration:
         try:
             repourl = 'http://' + repo
             r = requests.get("%s/ppdslist.json" % repourl, allow_redirects=False)
-        except requests.exceptions.ConnectionError:
+            r.raise_for_status()
+        except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError, requests.exceptions.MissingSchema):
             try:
                 repourl = 'https://' + repo
                 r = requests.get("%s/ppdslist.json" % repourl, allow_redirects=False)
-            except requests.exceptions.ConnectionError:
+                r.raise_for_status()
+            except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError, requests.exceptions.MissingSchema):
                 return('down')
+
     def addrepo(self, repo):
         #add repo to list, checking for server status
         if self.testrepo(repo) == 'down':
