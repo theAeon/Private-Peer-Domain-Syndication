@@ -1,4 +1,4 @@
-import sys, json, os, requests
+import sys, json, os, requests, shutil
 ##everything to do with configuration in a convenient class
 class Configuration:
     def __init__(self):
@@ -22,6 +22,7 @@ class Configuration:
         else:
             self.hostfile = str(input("Enter Plaintext Hostfile Location: "))
         self.repositories.append(self.defaultdomain)
+        self.makerepofolders()
     def save(self):
         #dump config to json
         if os.path.isfile('config.json'):
@@ -71,3 +72,9 @@ class Configuration:
         #add repo to list regardless of server status
         self.repositories.append(repo)
         self.makerepofolders()
+    def removerepo(self, repo):
+        if repo in self.repositories:
+            self.repositories.remove(repo)
+            shutil.rmtree('repos/%s/' % repo)
+        else:
+            return 'repo does not exist'
