@@ -13,3 +13,14 @@ PPDS is an open-source and semi-centralized replacement to traditional domain re
 Repo formatting and protocol to follow.
 
 The current idea of implementation is to create a hosts-file patch manager that downloads from a central repository (user-repos will be possible of course) that is verified through some kind of cert service.
+
+
+TODO:
+
+Implement download requests from the repositories.
+
+Implement deduplicator and actual hosts file patcher.
+
+Some kind of public key private key verification for repositories.
+
+GUI
