@@ -679,7 +679,11 @@ This application bundles the following third-party packages in accordance
 with the following licenses:
 ________________________________________________________________________________
 
-Requests:
+
+Package: Requests
+License: Apache 2.0/hybrid
+License Source: http://docs.python-requests.org/en/master/user/intro/#requests-license
+Source Text:
 
 Copyright 2017 Kenneth Reitz
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
