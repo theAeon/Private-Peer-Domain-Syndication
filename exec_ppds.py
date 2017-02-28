@@ -9,6 +9,7 @@ testconfig.save()
 testconfig.load()
 testconfig.addrepo('ppds.rollcagetech.com')
 testconfig.forceaddrepo('ppds.rollcagetech.com')
+testconfig.definerepopriority()
 if testconfig.testrepo('rollcagetech.com') == 'down':
     print ('down')
 testconfig.initrepolist()

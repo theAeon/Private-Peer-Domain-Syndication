@@ -9,6 +9,7 @@ class Configuration:
         self.patchlocation = 'hosts.patch'
         self.defaultdomain = 'repo.ppds.me'
         self.repoobjectdict = {}
+        self.repopriority = dict()
     def printdict(self):
         #debug
         print(self.__dict__)
@@ -71,7 +72,6 @@ class Configuration:
             return "failure"
         self.repositories.append(repo)
         self.makerepofolders()
-        self.save()
     def forceaddrepo(self, repo):
         #add repo to list regardless of server status
         self.repositories.append(repo)
@@ -85,6 +85,9 @@ class Configuration:
     def initrepolist(self):
         ##unload before saving or modifying please
         for item in self.repositories:
-            self.repoobjectdict[item] = classes.repository.Repository(item)
+            self.repoobjectdict[item] = classes.repository.Repository(item, self)
     def unloadrepolist(self):
         self.repoobjectdict = {}
+    def definerepopriority(self):
+        self.repopriority = dict((name,order) for order,name in enumerate(self.repositories))
+        print(self.repopriority)

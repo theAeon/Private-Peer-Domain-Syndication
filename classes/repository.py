@@ -1,10 +1,11 @@
 import json, classes.config, os
 
 class Repository:
-    def __init__(self, name):
+    def __init__(self, name, configuration):
         self.hosts = {}
         self.name = (name)
         self.packages = {}
+        self.priority = configuration.repopriority[name]
     def printdict(self):
         print(self.__dict__)
     def loadpackagelist(self):
