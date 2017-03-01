@@ -9,7 +9,7 @@ class Configuration:
         self.patchlocation = 'hosts.patch'
         self.defaultdomain = 'repo.ppds.me'
         self.repoobjectdict = {}
-        self.repopriority = dict()
+        self.repopriority = {}
     def printdict(self):
         #debug
         print(self.__dict__)
@@ -27,12 +27,15 @@ class Configuration:
         self.makerepofolders()
     def save(self):
         '''dump config to json'''
-        if os.path.isfile('config.json'):
-            check = str(input('Overwrite config? (y/n): '))
-            if check == 'y':
-                os.remove('config.json')
-            else:
-                return 'cancelled'
+        if self.repoobjectdict and self.repopriority == false:
+            if os.path.isfile('config.json'):
+                check = str(input('Overwrite config? (y/n): '))
+                if check == 'y':
+                    os.remove('config.json')
+                else:
+                    return 'cancelled'
+        else:
+            return 'notempty'
         f = open('config.json', 'w+')
         json.dump(self.__dict__, f)
         f.close()
