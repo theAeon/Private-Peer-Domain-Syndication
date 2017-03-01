@@ -18,16 +18,16 @@ class Configuration:
         append default repo (repo.ppds.me) (pls no stealerino my domainerino)'''
         self.platform = sys.platform
         if self.platform == 'darwin' or 'linux':
-            self.hostfile = '/etc/hosts'
+            self.hostfile = '/etc/'
         elif self.platform == 'win32':
-            self.hostfile = '%\SystemRoot%\\System32\\drivers\\etc\\hosts'
+            self.hostfile = '%\SystemRoot%\\System32\\drivers\\etc\\'
         else:
             self.hostfile = str(input("Enter Plaintext Hostfile Location: "))
         self.repositories.append(self.defaultdomain)
         self.makerepofolders()
     def save(self):
         '''dump config to json'''
-        if self.repoobjectdict and self.repopriority == false:
+        if any(self.repoobjectdict) == False and any(self.repopriority) == False:
             if os.path.isfile('config.json'):
                 check = str(input('Overwrite config? (y/n): '))
                 if check == 'y':

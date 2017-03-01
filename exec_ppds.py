@@ -21,3 +21,5 @@ testconfig.repoobjectdict['ppds.rollcagetech.com'].loadjson()
 patcher = classes.hostfilepatch.HostPatch(testconfig)
 
 patcher.createpatch()
+patcher.patchhosts()
+patcher.unpatchhosts()
