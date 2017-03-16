@@ -29,6 +29,7 @@ def escalate(config):
     else:
         return 'unsupported'
 
+
 if '--version' in sys.argv:
     print("""
     PPDS pre-alpha 0.0.1
@@ -38,4 +39,30 @@ if '--version' in sys.argv:
     THIS SOFTWARE IS PROVIDED AS-IS
     WITHOUT WARRANTY OR LIABILITY AS THE LAW PERMITS
     """)
+    exit()
+
+elif '--autoconfig' in sys.argv:
+    newConfig = classes.config.Configuration()
+    if isRoot and '--root' not in sys.argv:
+        print('''
+Please run as your normal user so permission errors do not occur.
+              ''')
+        exit()
+    else:
+        print('''
+Creating config.json with default settings''')
+        newConfig.autoconfig()
+        newConfig.save()
+        exit()
+elif '--help' in sys.argv:
+    print('''
+USAGE:
+(in order of priority)
+--version:    prints version string
+--autoconfig: generates default configuration file
+--root:       overrides user permission sanity checks
+--help:       prints this message''')
+    exit()
+else:
+    print('Use --help for usable arguments')
     exit()
