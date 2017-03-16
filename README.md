@@ -19,7 +19,7 @@ TODO:
 
 Implement download requests from the repositories.
 
-Implement deduplicator and actual hosts file patcher.
+*Real* Conflict Management
 
 Some kind of public key private key verification for repositories.
 
