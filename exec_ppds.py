@@ -4,6 +4,7 @@ import classes.hostfilepatch
 import classes.repository
 import os
 import sys
+import shutil
 UID = os.getuid()
 isRoot = False
 if os.getuid() == 0:
@@ -17,11 +18,12 @@ def CheckAccess(location):
         return 'rootneeded'
 
 
-def escalate(config):
+def escalate():
     # spawn sudo command and rerun
     if isRoot:
         return 'root'
-    if config.platform == 'linux' or 'darwin':
+    if (sys.platform == 'linux' or 'darwin' and
+       shutil.which('sudo') is not None):
         if '.py' in sys.argv[0]:
             args = ['python3'] + sys.argv
         args = ['sudo'] + args
@@ -30,6 +32,16 @@ def escalate(config):
         return 'unsupported'
 
 
+if '--root' in sys.argv and isRoot is False:
+    print('Trying to request root privileges...')
+
+    if escalate() == 'unsupported':
+        print('''
+    You are not root. Please use your system\'s utilities to run this program
+    as root.''')
+        exit()
+    else:
+        print("Success.")
 if '--version' in sys.argv:
     print("""
     PPDS pre-alpha 0.0.1
@@ -46,6 +58,7 @@ elif '--autoconfig' in sys.argv:
     if isRoot and '--root' not in sys.argv:
         print('''
 Please run as your normal user so permission errors do not occur.
+Use --root to override.
               ''')
         exit()
     else:
@@ -60,7 +73,7 @@ USAGE:
 (in order of priority)
 --version:    prints version string
 --autoconfig: generates default configuration file
---root:       overrides user permission sanity checks
+--root:       overrides user permission sanity checks and runs program as root
 --help:       prints this message''')
     exit()
 else:
