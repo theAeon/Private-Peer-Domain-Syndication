@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-import classes.config, classes.hostfilepatch, classes.repository
+import classes.config
+import classes.hostfilepatch
+import classes.repository
 
 testconfig = classes.config.Configuration()
 

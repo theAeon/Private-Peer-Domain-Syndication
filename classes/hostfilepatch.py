@@ -1,13 +1,17 @@
-import json, os, shutil
+import json
+import os
+import shutil
+
 
 class HostPatch:
     def __init__(self, configuration):
-        #copy relevant vars from configuration
+        # copy relevant vars from configuration
         self.location = configuration.patchlocation
-        self.hostlocation = configuration.hostfile ##may error on windows
+        self.hostlocation = configuration.hostfile  # may error on windows
         self.repoobjectdict = configuration.repoobjectdict
         self.hostentries = []
         self.ipentries = []
+
     def createpatch(self):
         if os.path.isfile(self.location):
             os.remove(self.location)
@@ -19,18 +23,24 @@ class HostPatch:
             for package in self.repoobjectdict[repo].hosts:
                 for entry in self.repoobjectdict[repo].hosts[package]:
                     if entry not in self.hostentries:
-                        if self.repoobjectdict[repo].hosts[package][entry] not in self.ipentries:
-                            self.ipentries.append(self.repoobjectdict[repo].hosts[package][entry])
+                        if (self.repoobjectdict[repo].hosts[package][entry]
+                                not in self.ipentries):
+                            self.ipentries.append(
+                                self.repoobjectdict[repo].hosts[package][entry]
+                            )
                             self.hostentries.append(entry)
-                            f.write(self.repoobjectdict[repo].hosts[package][entry]
-                            + ' ' + entry + '\n')
+                            f.write(
+                                self.repoobjectdict[repo].hosts[package][entry]
+                                + ' ' + entry + '\n')
         f.close()
+
     def patchhosts(self):
-        if os.access(self.hostlocation, os.W_OK) == True:
+        if os.access(self.hostlocation, os.W_OK):
             with open(('%s/hosts' % self.hostlocation), 'r') as f:
                 if '##PATCHED BY PPDS##' in f.read():
                     return 'exists'
-            shutil.copy((('%s/hosts') % self.hostlocation), ('%s/hosts.bak' % self.hostlocation))
+            shutil.copy((('%s/hosts') % self.hostlocation),
+                        ('%s/hosts.bak' % self.hostlocation))
             filein = open(('%s/hosts' % self.hostlocation), 'r')
             fileone = filein.read()
             filein.close()
@@ -45,10 +55,11 @@ class HostPatch:
             return 'rootneeded'
 
     def unpatchhosts(self):
-        if os.access(self.hostlocation, os.W_OK) == True:
-            if os.path.isfile('%s/hosts.bak' % self.hostlocation) == True:
+        if os.access(self.hostlocation, os.W_OK):
+            if os.path.isfile('%s/hosts.bak' % self.hostlocation):
                 os.remove('%s/hosts' % self.hostlocation)
-                shutil.copy((('%s/hosts.bak') % self.hostlocation), ('%s/hosts' % self.hostlocation))
+                shutil.copy((('%s/hosts.bak') % self.hostlocation),
+                            ('%s/hosts' % self.hostlocation))
             else:
                 return 'nobackup'
         else:
