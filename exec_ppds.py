@@ -35,7 +35,8 @@ def escalate():
     else:
         return 'unsupported'
 
-
+if '--root' in sys.argv and isRoot is True:
+    print("Sucessfully loaded root mode.")
 if '--root' in sys.argv and isRoot is False:
     print('Trying to request root privileges...')
 
@@ -44,8 +45,6 @@ if '--root' in sys.argv and isRoot is False:
 You are not root. Please use your system\'s utilities to run this program
 as root.''')
         exit(1)
-    else:
-        print("Success.")
 if '--version' in sys.argv:
     print("""
     PPDS pre-alpha 0.0.1
