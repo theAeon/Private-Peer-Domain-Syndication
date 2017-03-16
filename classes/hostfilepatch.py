@@ -4,8 +4,9 @@ import shutil
 
 
 class HostPatch:
+    '''functions for patching ppds to the host file'''
     def __init__(self, configuration):
-        # copy relevant vars from configuration
+        '''copy relevant vars from configuration'''
         self.location = configuration.patchlocation
         self.hostlocation = configuration.hostfile  # may error on windows
         self.repoobjectdict = configuration.repoobjectdict
@@ -13,6 +14,7 @@ class HostPatch:
         self.ipentries = []
 
     def createpatch(self):
+        '''generates file to append to hosts'''
         if os.path.isfile(self.location):
             os.remove(self.location)
         f = (open((self.location), 'a+'))
@@ -35,6 +37,7 @@ class HostPatch:
         f.close()
 
     def patchhosts(self):
+        ''' patches host file '''
         if os.access(self.hostlocation, os.W_OK):
             with open(('%s/hosts' % self.hostlocation), 'r') as f:
                 if '##PATCHED BY PPDS##' in f.read():
@@ -55,10 +58,11 @@ class HostPatch:
             return 'rootneeded'
 
     def unpatchhosts(self):
+        ''' unpatches host file'''
         if os.access(self.hostlocation, os.W_OK):
             if os.path.isfile('%s/hosts.bak' % self.hostlocation):
                 os.remove('%s/hosts' % self.hostlocation)
-                shutil.copy((('%s/hosts.bak') % self.hostlocation),
+                shutil.move((('%s/hosts.bak') % self.hostlocation),
                             ('%s/hosts' % self.hostlocation))
             else:
                 return 'nobackup'

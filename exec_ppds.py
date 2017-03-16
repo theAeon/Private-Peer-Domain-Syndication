@@ -23,7 +23,7 @@ def CheckAccess(location):
 
 
 def escalate():
-    # spawn sudo command and rerun
+    '''spawn sudo command and rerun'''
     if isRoot:
         return 'root'
     if (sys.platform == 'linux' or 'darwin' and
@@ -43,7 +43,7 @@ if '--root' in sys.argv and isRoot is False:
         print('''
 You are not root. Please use your system\'s utilities to run this program
 as root.''')
-        exit()
+        exit(1)
     else:
         print("Success.")
 if '--version' in sys.argv:
@@ -55,19 +55,19 @@ if '--version' in sys.argv:
     THIS SOFTWARE IS PROVIDED AS-IS
     WITHOUT WARRANTY OR LIABILITY AS THE LAW PERMITS
     """)
-    exit()
+    exit(0)
 
 elif '--autoconfig' in sys.argv:
     newConfig = classes.config.Configuration()
     if isRoot and '--root' not in sys.argv:
         print(PermError)
-        exit()
+        exit(1)
     else:
         print('''
 Creating config.json with default settings''')
         newConfig.autoconfig()
         newConfig.save()
-        exit()
+        exit(0)
 elif '--add' in sys.argv:
     config = classes.config.Configuration()
     if config.load() != 'No File':
@@ -78,14 +78,14 @@ elif '--add' in sys.argv:
         if config.addrepo(newrepo) != "failure":
             if isRoot and '--root' not in sys.argv:
                 print(PermError)
-                exit()
+                exit(1)
             else:
                 config.save()
                 print("Added.")
-                exit()
+                exit(0)
         else:
             print("Repository is down. Aborting.")
-            exit()
+            exit(1)
     else:
         print("Please generate a config.json.")
 elif '--forceadd' in sys.argv:
@@ -97,18 +97,54 @@ Exceptions may occur.""")
         newrepo = str(input("Repository to add: "))
         if newrepo in config.repositories:
             print('Repo already added.')
-            exit()
+            exit(1)
         config.forceaddrepo(newrepo)
         if isRoot and '--root' not in sys.argv:
             print(PermError)
-            exit()
+            exit(1)
         else:
             config.save()
             print("Added.")
-            exit()
+            exit(0)
     else:
         print("Please generate a config.json.")
-
+elif '--patch' in sys.argv:
+    config = classes.config.Configuration()
+    if config.load() != "No File":
+        if "--root" not in sys.argv:
+            print("Please restart the program with --root.")
+            exit(1)
+        else:
+            config.initrepolist()
+            for item in config.repoobjectdict:
+                config.repoobjectdict[item].loadpackagelist()
+                config.repoobjectdict[item].loadjson()
+            patcher = classes.hostfilepatch.HostPatch(config)
+            patcher.createpatch()
+            if patcher.patchhosts() != "exists":
+                print("Hostsfile patched sucessfully.")
+                config.unloadrepolist()
+                exit(0)
+            else:
+                print("Patcher has already been used on this hosts file.")
+                config.unloadrepolist()
+                exit(1)
+    else:
+        print("Please generate a config.json.")
+elif '--unpatch' in sys.argv:
+    if "--root" not in sys.argv:
+        print("Please restart the program with --root.")
+        exit(1)
+    else:
+        config = classes.config.Configuration()
+        if config.load() != "No File":
+            patcher = classes.hostfilepatch.HostPatch(config)
+            if patcher.unpatchhosts() != "nobackup":
+                print('Successfully unpatched hosts.')
+                exit(0)
+            else:
+                print("No hostsfile backup.")
+                exit(1)
 elif '--help' in sys.argv:
     print('''
 USAGE:
@@ -117,9 +153,11 @@ USAGE:
 --autoconfig: generates default configuration file
 --add:        adds repository to config; checks status of repository
 --forceadd:   adds repository to config without status check
+--patch:      patches the hosts file of the computer (must be root)
+--unpatch:    removes any patches created by ppds (must be root)
 --root:       overrides user permission sanity checks and runs program as root
 --help:       prints this message''')
-    exit()
+    exit(0)
 else:
     print('Use --help for usable arguments')
-    exit()
+    exit(0)

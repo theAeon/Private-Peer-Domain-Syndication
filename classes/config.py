@@ -6,8 +6,8 @@ import shutil
 import classes.repository
 
 
-# everything to do with configuration in a convenient class
 class Configuration:
+    '''everything to do with configuration in a convenient class'''
     def __init__(self):
         '''define all aspects of configuration'''
         self.repositories = []
@@ -19,7 +19,7 @@ class Configuration:
         self.repopriority = {}
 
     def printdict(self):
-        # debug
+        '''debug'''
         print(self.__dict__)
 
     def autoconfig(self):
@@ -102,6 +102,7 @@ class Configuration:
         self.makerepofolders()
 
     def removerepo(self, repo):
+        '''removes repo from list'''
         if repo in self.repositories:
             self.repositories.remove(repo)
             shutil.rmtree('repos/%s/' % repo)
@@ -111,6 +112,7 @@ class Configuration:
     def initrepolist(self):
         '''adds repository class to list
         unload before saving or modifying please'''
+        self.definerepopriority()
         for item in self.repositories:
             self.repoobjectdict[item] = classes.repository.Repository(item,
                                                                       self)
@@ -122,4 +124,3 @@ class Configuration:
     def definerepopriority(self):
         self.repopriority = dict((name, order) for order, name in
                                  enumerate(self.repositories))
-        print(self.repopriority)
