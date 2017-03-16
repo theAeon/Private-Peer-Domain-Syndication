@@ -9,6 +9,10 @@ UID = os.getuid()
 isRoot = False
 if os.getuid() == 0:
     isRoot = True
+PermError = '''
+Please run as your normal user so permission errors do not occur.
+Use --root to override.
+'''
 
 
 def CheckAccess(location):
@@ -37,8 +41,8 @@ if '--root' in sys.argv and isRoot is False:
 
     if escalate() == 'unsupported':
         print('''
-    You are not root. Please use your system\'s utilities to run this program
-    as root.''')
+You are not root. Please use your system\'s utilities to run this program
+as root.''')
         exit()
     else:
         print("Success.")
@@ -56,10 +60,7 @@ if '--version' in sys.argv:
 elif '--autoconfig' in sys.argv:
     newConfig = classes.config.Configuration()
     if isRoot and '--root' not in sys.argv:
-        print('''
-Please run as your normal user so permission errors do not occur.
-Use --root to override.
-              ''')
+        print(PermError)
         exit()
     else:
         print('''
@@ -67,12 +68,55 @@ Creating config.json with default settings''')
         newConfig.autoconfig()
         newConfig.save()
         exit()
+elif '--add' in sys.argv:
+    config = classes.config.Configuration()
+    if config.load() != 'No File':
+        newrepo = str(input("Repository to add: "))
+        if newrepo in config.repositories:
+            print('Repo already added.')
+            exit()
+        if config.addrepo(newrepo) != "failure":
+            if isRoot and '--root' not in sys.argv:
+                print(PermError)
+                exit()
+            else:
+                config.save()
+                print("Added.")
+                exit()
+        else:
+            print("Repository is down. Aborting.")
+            exit()
+    else:
+        print("Please generate a config.json.")
+elif '--forceadd' in sys.argv:
+    config = classes.config.Configuration()
+    if config.load() != 'No File':
+        print("""
+Adding repository without testing validity:
+Exceptions may occur.""")
+        newrepo = str(input("Repository to add: "))
+        if newrepo in config.repositories:
+            print('Repo already added.')
+            exit()
+        config.forceaddrepo(newrepo)
+        if isRoot and '--root' not in sys.argv:
+            print(PermError)
+            exit()
+        else:
+            config.save()
+            print("Added.")
+            exit()
+    else:
+        print("Please generate a config.json.")
+
 elif '--help' in sys.argv:
     print('''
 USAGE:
 (in order of priority)
 --version:    prints version string
 --autoconfig: generates default configuration file
+--add:        adds repository to config; checks status of repository
+--forceadd:   adds repository to config without status check
 --root:       overrides user permission sanity checks and runs program as root
 --help:       prints this message''')
     exit()
