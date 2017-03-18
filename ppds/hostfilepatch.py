@@ -1,4 +1,4 @@
-import json
+'''object to patch the hostfile and resolve conficts'''
 import os
 import shutil
 
@@ -17,8 +17,8 @@ class HostPatch:
         '''generates file to append to hosts'''
         if os.path.isfile(self.location):
             os.remove(self.location)
-        f = (open((self.location), 'a+'))
-        f.write('##PATCHED BY PPDS## \n')
+        filevar = (open((self.location), 'a+'))
+        filevar.write('##PATCHED BY PPDS## \n')
         self.hostentries = []
         self.ipentries = []
         for repo in self.repoobjectdict:
@@ -31,16 +31,16 @@ class HostPatch:
                                 self.repoobjectdict[repo].hosts[package][entry]
                             )
                             self.hostentries.append(entry)
-                            f.write(
+                            filevar.write(
                                 self.repoobjectdict[repo].hosts[package][entry]
                                 + ' ' + entry + '\n')
-        f.close()
+        filevar.close()
 
     def patchhosts(self):
         ''' patches host file '''
         if os.access(self.hostlocation, os.W_OK):
-            with open(('%s/hosts' % self.hostlocation), 'r') as f:
-                if '##PATCHED BY PPDS##' in f.read():
+            with open(('%s/hosts' % self.hostlocation), 'r') as filevar:
+                if '##PATCHED BY PPDS##' in filevar.read():
                     return 'exists'
             shutil.copy((('%s/hosts') % self.hostlocation),
                         ('%s/hosts.bak' % self.hostlocation))
@@ -53,7 +53,6 @@ class HostPatch:
             dataout = '\n' + fileone + filetwo
             fileout = open((('%s/hosts') % self.hostlocation), 'w')
             fileout.write(dataout)
-            fileout.close
         else:
             return 'rootneeded'
 

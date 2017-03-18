@@ -1,12 +1,35 @@
+'''contains configuration class- applies and stores configuration'''
 import sys
 import json
 import os
-import requests
 import shutil
-import classes.repository
+import requests
+import repository
+
+
+def testrepo(repo):
+    '''send http request to repolist on host'''
+    try:
+        repourl = 'http://' + repo
+        request = requests.get("%s/ppdslist.json" % repourl,
+                               allow_redirects=False)
+        request.raise_for_status()
+    except (requests.exceptions.ConnectionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.MissingSchema):
+        try:
+            repourl = 'https://' + repo
+            request = requests.get("%s/ppdslist.json" % repourl,
+                                   allow_redirects=False)
+            request.raise_for_status()
+        except (requests.exceptions.ConnectionError,
+                requests.exceptions.HTTPError,
+                requests.exceptions.MissingSchema):
+            return 'down'
 
 
 class Configuration:
+    # pylint: disable=too-many-instance-attributes
     '''everything to do with configuration in a convenient class'''
     def __init__(self):
         '''define all aspects of configuration'''
@@ -17,6 +40,7 @@ class Configuration:
         self.defaultdomain = 'repo.ppds.me'
         self.repoobjectdict = {}
         self.repopriority = {}
+        self.__dict__ = self.__dict__
 
     def printdict(self):
         '''debug'''
@@ -29,7 +53,8 @@ class Configuration:
         if self.platform == 'darwin' or 'linux':
             self.hostfile = '/etc/'
         elif self.platform == 'win32':
-            self.hostfile = '%\SystemRoot%\\System32\\drivers\\etc\\'
+            return 'windows not yet supported'
+            # self.hostfile = '%\SystemRoot%\\System32\\drivers\\etc\\'
         else:
             self.hostfile = str(input("Enter Plaintext Hostfile Location: "))
         self.repositories.append(self.defaultdomain)
@@ -38,7 +63,7 @@ class Configuration:
     def save(self):
         '''dump config to json'''
         if (any(self.repoobjectdict) is False and
-           any(self.repopriority) is False):
+                any(self.repopriority) is False):
             if os.path.isfile('config.json'):
                 check = str(input('Overwrite config? (y/n): '))
                 if check == 'y':
@@ -47,19 +72,19 @@ class Configuration:
                     return 'cancelled'
         else:
             return 'notempty'
-        f = open('config.json', 'w+')
-        json.dump(self.__dict__, f)
-        f.close()
-        return('created')
+        cfg = open('config.json', 'w+')
+        json.dump(self.__dict__, cfg)
+        cfg.close()
+        return 'created'
 
     def load(self):
         '''load config from config.json'''
         if os.path.isfile('config.json'):
-            f = open('config.json', 'r+')
-            self.__dict__ = json.load(f)
-            f.close()
+            cfg = open('config.json', 'r+')
+            self.__dict__ = json.load(cfg)
+            cfg.close()
         else:
-            return ('No File')
+            return 'No File'
 
     def makerepofolders(self):
         '''make folders for all repos in the repository list'''
@@ -69,29 +94,9 @@ class Configuration:
             if not os.path.exists('repos/%s/' % entry):
                 os.makedirs('repos/%s/' % entry)
 
-    def testrepo(self, repo):
-        '''send http request to repolist on host'''
-        try:
-            repourl = 'http://' + repo
-            r = requests.get("%s/ppdslist.json" % repourl,
-                             allow_redirects=False)
-            r.raise_for_status()
-        except (requests.exceptions.ConnectionError,
-                requests.exceptions.HTTPError,
-                requests.exceptions.MissingSchema):
-            try:
-                repourl = 'https://' + repo
-                r = requests.get("%s/ppdslist.json" % repourl,
-                                 allow_redirects=False)
-                r.raise_for_status()
-            except (requests.exceptions.ConnectionError,
-                    requests.exceptions.HTTPError,
-                    requests.exceptions.MissingSchema):
-                return('down')
-
     def addrepo(self, repo):
         '''add repo to list, checking for server status'''
-        if self.testrepo(repo) == 'down':
+        if testrepo(repo) == 'down':
             return "failure"
         self.repositories.append(repo)
         self.makerepofolders()
@@ -114,13 +119,14 @@ class Configuration:
         unload before saving or modifying please'''
         self.definerepopriority()
         for item in self.repositories:
-            self.repoobjectdict[item] = classes.repository.Repository(item,
-                                                                      self)
+            self.repoobjectdict[item] = repository.Repository(item,
+                                                              self)
 
     def unloadrepolist(self):
         '''clears repository classes'''
         self.repoobjectdict = {}
 
     def definerepopriority(self):
+        ''' assigns each repo a number based on order in list '''
         self.repopriority = dict((name, order) for order, name in
                                  enumerate(self.repositories))
