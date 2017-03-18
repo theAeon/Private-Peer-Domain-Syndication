@@ -171,6 +171,3 @@ patches hostsfiles with all enabled packages and backs up previous hosts"""
             self.unpatch()
         elif "--help" in self.args:
             self.printhelp()
-
-
-MAININSTANCE = Cli(sys.argv, 'cli')
