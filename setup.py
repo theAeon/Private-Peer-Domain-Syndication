@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ppds',
-    version='0.0.1.dev',
+    version='0.0.1.dev1',
 
     description='Private Peer Domain Syndication',
     long_description='''
@@ -31,9 +31,20 @@ Some kind of public key private key verification for repositories.
 GUI
 
 A spec so that people can code implementations that aren't written by me
+
+Building/Running:
+
+I've only tested this against Python 3.6, but there's no reason it wouldn't work on earlier versions.
+
+DOES NOT WORK ON PYTHON 2
+
+CURRENTLY DOES NOT WORK ON WINDOWS
+
+run setup.py install or setup.py build bdist_wheel and install with pip
 ''',
 
     url='https://github.com/theAeon/Private-Peer-Domain-Syndication',
+    download_url='https://github.com/theAeon/Private-Peer-Domain-Syndication/tarball/0.0.1.dev1',
 
     author="Andrew Donshik",
     author_email='andrewdonshik@gmail.com',
