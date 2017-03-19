@@ -55,7 +55,7 @@ run setup.py install or setup.py build bdist_wheel and install with pip
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-        'Programming Language :: Python :: 3 :: only',
+        'Programming Language :: Python :: 3 :: Only',
         'Operating System :: POSIX',
         'Topic :: Internet :: Name Service (DNS)',
     ],

@@ -1,2 +1,3 @@
 include license
 include README.md
+include changelog.txt
