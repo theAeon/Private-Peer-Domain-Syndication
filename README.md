@@ -3,7 +3,7 @@
     _/::\:\__\_/::\:\__\_/:/\:\__\_/\:\:\__\
     _\/\::/__/_\/\::/__/_\:\/:/__/_\:\:\/__/
     ____\/__/_____\/__/___\::/__/___\::/__/
-    Aaron Paterson,  2014-2017  \/__/     \/__/
+    Aaron Paterson,  2017  \/__/     \/__/
     Andrew Donshik.
 
 The Private-Peer-Domain-Syndication Manifesto:
