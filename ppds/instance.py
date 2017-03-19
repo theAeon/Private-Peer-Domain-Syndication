@@ -35,7 +35,7 @@ class Instance(object):
     def __init__(self, args, mode):
         self.args = args
         self.mode = mode
-        self.configuration = ppds.config.Configuration()
+        self.configuration = ppds.config.Configuration(self.mode)
         self.isroot = checkroot()
         self.run()
 
@@ -55,7 +55,6 @@ class Cli(Instance):
 USAGE:
 (in order of priority)
 --version:    prints version string
---autoconfig: generates default configuration file
 --add:        adds repository to config; checks status of repository
 --forceadd:   adds repository to config without status check
 --patch:      patches the hosts file of the computer (must be root)
@@ -68,15 +67,6 @@ USAGE:
         ''' prints versionstring '''
         if self.mode == 'cli':
             print(VERSIONSTRING)
-
-    def autoconfig(self):
-        '''auto configures config.json with default values'''
-        self.configuration.autoconfig()
-        print("Creating config.json with default settings")
-        if self.isroot:
-            print("Overwriting as root.")
-        self.configuration.save()
-        sys.exit(0)
 
     def addrepo(self):
         """adds ppds repostiory and tests avaliablity"""
@@ -153,14 +143,8 @@ patches hostsfiles with all enabled packages and backs up previous hosts"""
         print(self.helpmessage)
 
     def main(self):
-        if (self.configuration.load() == "No File" and
-                "--autoconfig" not in self.args and
-                "--version" not in self.args):
-            print("Please generate a config.json with --autoconfig.")
         if "--version" in self.args:
             self.version()
-        elif "--autoconfig" in self.args:
-            self.autoconfig()
         elif "--add" in self.args:
             self.addrepo()
         elif "--forceadd" in self.args:

@@ -31,56 +31,72 @@ def testrepo(repo):
 class Configuration:
     # pylint: disable=too-many-instance-attributes
     '''everything to do with configuration in a convenient class'''
-    def __init__(self):
-        '''define all aspects of configuration'''
+    def __init__(self, mode):
+        '''define all aspects of configuration (datalocation hardcoded)'''
+        self.notice = """
+        DO NOT CHANGE THIS FILE UNLESS YOU ABSOLUTELY KNOW WHAT YOU'RE DOING
+        """
         self.repositories = []
         self.platform = ''
         self.hostfile = ''
-        self.patchlocation = 'hosts.patch'
+        self.patchlocation = '%s/hosts.patch' % self.datafolder
         self.defaultdomain = 'repo.ppds.me'
         self.repoobjectdict = {}
         self.repopriority = {}
+        self.datafolder = ''
         self.__dict__ = self.__dict__
+        self.autoconfig(mode)
+        if not os.path.exists(self.datafolder):
+            if mode == 'cli':
+                print("Writing default data directory...")
+            os.mkdir(self.datafolder)
+            self.save(mode)
+            self.makerepofolders()
+        self.load()
 
     def printdict(self):
         '''debug'''
         print(self.__dict__)
 
-    def autoconfig(self):
+    def autoconfig(self, mode):
         '''detect platform and hosts file location (windows may be wrong
         append default repo (repo.ppds.me)(pls no stealerino my domainerino)'''
+        if mode == 'cli':
+            print("Creating default configration file...")
         self.platform = sys.platform
         if self.platform == 'darwin' or 'linux':
             self.hostfile = '/etc/'
+            self.datafolder = '~/.config/ppds/'
         elif self.platform == 'win32':
-            return 'windows not yet supported'
+            print('windows not yet supported')
+            sys.exit(1)
             # self.hostfile = '%\SystemRoot%\\System32\\drivers\\etc\\'
         else:
             self.hostfile = str(input("Enter Plaintext Hostfile Location: "))
         self.repositories.append(self.defaultdomain)
-        self.makerepofolders()
 
-    def save(self):
+    def save(self, mode):
         '''dump config to json'''
         if (any(self.repoobjectdict) is False and
                 any(self.repopriority) is False):
-            if os.path.isfile('config.json'):
-                check = str(input('Overwrite config? (y/n): '))
-                if check == 'y':
-                    os.remove('config.json')
-                else:
-                    return 'cancelled'
+            if os.path.isfile('%s/config.json' % self.datafolder):
+                if mode == 'cli':
+                    check = str(input('Overwrite config? (y/n): '))
+                    if check == 'y':
+                        os.remove('config.json')
+                    else:
+                        return 'cancelled'
         else:
             return 'notempty'
-        cfg = open('config.json', 'w+')
+        cfg = open('%s/config.json' % self.datafolder, 'w+')
         json.dump(self.__dict__, cfg)
         cfg.close()
         return 'created'
 
     def load(self):
         '''load config from config.json'''
-        if os.path.isfile('config.json'):
-            cfg = open('config.json', 'r+')
+        if os.path.isfile('%s/config.json' % self.datafolder):
+            cfg = open('%s/config.json' % self.datafolder, 'r+')
             self.__dict__ = json.load(cfg)
             cfg.close()
         else:
@@ -88,11 +104,11 @@ class Configuration:
 
     def makerepofolders(self):
         '''make folders for all repos in the repository list'''
-        if not os.path.exists('repos'):
-            os.mkdir('repos')
+        if not os.path.exists('%s/repos' % self.datafolder):
+            os.mkdir('%s/repos' % self.datafolder)
         for entry in self.repositories:
-            if not os.path.exists('repos/%s/' % entry):
-                os.makedirs('repos/%s/' % entry)
+            if not os.path.exists('%s/repos/%s/' % (self.datafolder, entry)):
+                os.makedirs('%s/repos/%s/' % (self.datafolder, entry))
 
     def addrepo(self, repo):
         '''add repo to list, checking for server status'''
@@ -110,7 +126,7 @@ class Configuration:
         '''removes repo from list'''
         if repo in self.repositories:
             self.repositories.remove(repo)
-            shutil.rmtree('repos/%s/' % repo)
+            shutil.rmtree('%s/repos/%s/' % (self.datafolder, repo))
         else:
             return 'repo does not exist'
 
