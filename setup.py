@@ -7,7 +7,7 @@ setup(
     version='0.0.1.dev',
 
     description='Private Peer Domain Syndication',
-    long_description='''::
+    long_description='''
     PPDS:
     Andrew Donshik, 2017
 
@@ -44,8 +44,7 @@ A spec so that people can code implementations that aren't written by me
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-        'Programming Language :: Python :: 3',
-        'Environment :: MacOS X',
+        'Programming Language :: Python :: 3 :: only',
         'Operating System :: POSIX',
         'Topic :: Internet :: Name Service (DNS)',
     ],
