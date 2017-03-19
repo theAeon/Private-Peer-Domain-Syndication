@@ -1,15 +1,14 @@
-#!/usr/bin/env python3
-'''executable script'''
+'''defines instances and logic'''
 import os
 import sys
-import config
-import hostfilepatch
+import ppds.config
+import ppds.hostfilepatch
 PERMERROR = '''
 Please run as your normal user so permission errors do not occur.
 Use --root to override.
 '''
 VERSIONSTRING = """"
-PPDS pre-alpha 0.0.1
+PPDS 0.0.1.dev0
 
 Private Peer Domain Syndication: copyright 2017 by Andrew Donshik
 Licensed under the GPL v3.0
@@ -36,7 +35,7 @@ class Instance(object):
     def __init__(self, args, mode):
         self.args = args
         self.mode = mode
-        self.configuration = config.Configuration()
+        self.configuration = ppds.config.Configuration()
         self.isroot = checkroot()
         self.run()
 
@@ -124,7 +123,7 @@ patches hostsfiles with all enabled packages and backs up previous hosts"""
                 for item in self.configuration.repoobjectdict:
                     self.configuration.repoobjectdict[item].loadpackagelist()
                     self.configuration.repoobjectdict[item].loadjson()
-                patcher = hostfilepatch.HostPatch(self.configuration)
+                patcher = ppds.hostfilepatch.HostPatch(self.configuration)
                 patcher.createpatch()
                 if patcher.patchhosts() != "exists":
                     print("Hostsfile patched sucessfully.")
@@ -141,7 +140,7 @@ patches hostsfiles with all enabled packages and backs up previous hosts"""
             print("Please restart the program with root permissions.")
             sys.exit(1)
         else:
-            patcher = hostfilepatch.HostPatch(self.configuration)
+            patcher = ppds.hostfilepatch.HostPatch(self.configuration)
             if patcher.unpatchhosts() != "nobackup":
                 print('Successfully unpatched hosts.')
                 sys.exit(0)
@@ -154,8 +153,9 @@ patches hostsfiles with all enabled packages and backs up previous hosts"""
         print(self.helpmessage)
 
     def main(self):
-        if (self.configuration.load() == "No file" and
-                "--autoconfig" not in self.args):
+        if (self.configuration.load() == "No File" and
+                "--autoconfig" not in self.args and
+                "--version" not in self.args):
             print("Please generate a config.json with --autoconfig.")
         if "--version" in self.args:
             self.version()

@@ -4,7 +4,7 @@ import json
 import os
 import shutil
 import requests
-import repository
+import ppds.repository
 
 
 def testrepo(repo):
@@ -119,8 +119,8 @@ class Configuration:
         unload before saving or modifying please'''
         self.definerepopriority()
         for item in self.repositories:
-            self.repoobjectdict[item] = repository.Repository(item,
-                                                              self)
+            self.repoobjectdict[item] = ppds.repository.Repository(item,
+                                                                   self)
 
     def unloadrepolist(self):
         '''clears repository classes'''
