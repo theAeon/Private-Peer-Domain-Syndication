@@ -169,5 +169,5 @@ patches hostsfiles with all enabled packages and backs up previous hosts"""
             self.patch()
         elif "--unpatch" in self.args:
             self.unpatch()
-        elif "--help" in self.args:
+        else:
             self.printhelp()

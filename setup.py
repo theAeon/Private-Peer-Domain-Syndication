@@ -17,11 +17,13 @@ setup(
     license="GPL-3.0",
 
     classifiers=[
-        'Development Status :: 1 - Development'
-        'Intended Audience :: Privacy-Minded Individuals'
-        'Topic :: Networking'
-        'License :: OSI Approved :: GPL 3.0'
-        'Programming Language :: Python :: 3'
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Programming Language :: Python :: 3',
+        'Environment :: MacOS X',
+        'Operating System :: POSIX',
+        'Topic :: Internet :: Name Service (DNS)',
     ],
 
     keywords='networking',
@@ -29,6 +31,8 @@ setup(
     packages=['ppds'],
 
     install_requires=['requests'],
+
+    # extras_require={'dev': ['pyinstaller']},
 
     entry_points={
         'console_scripts': [
