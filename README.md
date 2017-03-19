@@ -24,3 +24,5 @@ Implement download requests from the repositories.
 Some kind of public key private key verification for repositories.
 
 GUI
+
+A spec so that people can code implementations that aren't written by me
