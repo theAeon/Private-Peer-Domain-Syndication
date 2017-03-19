@@ -8,7 +8,7 @@ Please run as your normal user so permission errors do not occur.
 Use --root to override.
 '''
 VERSIONSTRING = """
-PPDS 0.0.1.dev0
+PPDS 0.0.1.dev1
 
 Private Peer Domain Syndication: copyright 2017 by Andrew Donshik
 Licensed under the GPL v3.0
@@ -35,8 +35,9 @@ class Instance(object):
     def __init__(self, args, mode):
         self.args = args
         self.mode = mode
-        self.configuration = ppds.config.Configuration(self.mode)
         self.isroot = checkroot()
+        self.configuration = ppds.config.Configuration(self.mode,
+                                                       self.isroot, self.args)
         self.run()
 
     def main(self):  # pylint: disable=E0211, R0201
@@ -74,11 +75,12 @@ USAGE:
         if newrepo in self.configuration.repositories:
             print('Repo already added.')
             sys.exit(1)
-        if self.configuration.addrepo(newrepo) != "failure":
+        if self.configuration.addrepo(newrepo,
+                                      self.isroot, self.args) != "failure":
             if self.isroot:
                 print("Overwriting as root.")
             else:
-                self.configuration.save()
+                self.configuration.save(self.mode, self.isroot, self.args)
                 print("Added.")
                 sys.exit(0)
         else:
@@ -94,16 +96,20 @@ Exceptions may occur.""")
         if newrepo in self.configuration.repositories:
             print('Repo already added.')
             sys.exit(1)
-        self.configuration.forceaddrepo(newrepo)
+        self.configuration.forceaddrepo(newrepo, self.isroot, self.args)
         if self.isroot:
             print("Overwriting as root.")
         print("Added.")
-        self.configuration.save()
+        self.configuration.save(self.mode, self.isroot, self.args)
         sys.exit(0)
 
     def patch(self):
         """
-patches hostsfiles with all enabled packages and backs up previous hosts"""
+patches hostsfiles with all enabled packages and backs up previous hosts
+
+REQUIRES ppdslist.json in repofolders or WILL CRASH (a dictionary of all json
+files with value enable/disable)
+"""
         if self.configuration.load() != "No File":
             if self.isroot is False:
                 print("Please restart the program with root permissions.")

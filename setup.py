@@ -62,7 +62,7 @@ run setup.py install or setup.py build bdist_wheel and install with pip
 
     keywords='networking',
 
-    packages=['ppds'],
+    packages=find_packages(),
 
     install_requires=['requests'],
 

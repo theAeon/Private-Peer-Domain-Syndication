@@ -7,6 +7,3 @@ import ppds.instance
 def exec_cli():
     '''script for pip'''
     maininstance = ppds.instance.Cli(sys.argv, 'cli')  # pylint: disable=W0612
-
-
-exec_cli()
