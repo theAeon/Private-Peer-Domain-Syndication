@@ -7,7 +7,7 @@ PERMERROR = '''
 Please run as your normal user so permission errors do not occur.
 Use --root to override.
 '''
-VERSIONSTRING = """"
+VERSIONSTRING = """
 PPDS 0.0.1.dev0
 
 Private Peer Domain Syndication: copyright 2017 by Andrew Donshik
