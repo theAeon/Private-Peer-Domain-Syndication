@@ -1,9 +1,9 @@
 '''defines instances and logic'''
 import os
+import ctypes
 import sys
 import ppds.config
 import ppds.hostfilepatch
-import ctypes
 PERMERROR = '''
 Please run as your normal user so permission errors do not occur.
 Use --root to override.
@@ -24,7 +24,7 @@ def checkroot():
 
 def checkadmin():
     '''checks admin on windows'''
-    return bool(ctypes.windll.shell32.IsUserAnAdmin)
+    return bool(ctypes.windll.shell32.IsUserAnAdmin())
 
 
 def checkaccess(location):
