@@ -67,13 +67,14 @@ Use --f to override''')
     def autoconfig(self):
         '''detect platform and hosts file location (windows may be wrong
         append default repo (repo.ppds.me)(pls no stealerino my domainerino)'''
-        self.platform = sys.platform
-        if self.platform == 'darwin' or 'linux':
+        if sys.platform == 'darwin' or 'linux':
             self.hostfile = '/etc/'
             self.datafolder = '%s/.config/ppds' % os.getenv("HOME")
-        elif self.platform == 'win32':
-            print('windows not yet supported')
-            sys.exit(1)
+        elif sys.platform == 'win32':
+            root = os.path.expandvars("%SystemRoot%")
+            self.hostfile = root + "\\System32\\drivers\\etc\\"
+            home = os.path.expandvars("%AppData%")
+            self.datafolder = home + "\\ppds"
             # self.hostfile = '%\SystemRoot%\\System32\\drivers\\etc\\'
         else:
             self.hostfile = str(input("Enter Plaintext Hostfile Location: "))

@@ -3,6 +3,7 @@ import os
 import sys
 import ppds.config
 import ppds.hostfilepatch
+import ctypes
 PERMERROR = '''
 Please run as your normal user so permission errors do not occur.
 Use --root to override.
@@ -18,24 +19,32 @@ WITHOUT WARRANTY OR LIABILITY AS THE LAW PERMITS
 
 
 def checkroot():
-    '''checks UID and sets root flag'''
+    '''checks UID and sets root flag on linux/osx'''
     return bool(os.getuid() == 0)
+
+def checkadmin():
+    '''checks admin on windows'''
+    return bool(ctypes.windll.shell32.IsUserAnAdmin)
 
 
 def checkaccess(location):
     '''validates access to a file'''
     if os.access(location, os.W_OK):
         return True
-    else:
-        return 'rootneeded'
+    return 'rootneeded'
 
 
 class Instance(object):
     ''' Manages execution (mode should be cli or gui)'''
     def __init__(self, args, mode):
         self.args = args
+        self.platform = sys.platform
         self.mode = mode
-        self.isroot = checkroot()
+        if self.platform == 'darwin' or self.platform == 'linux':
+            self.isroot = checkroot()
+        elif self.platform == 'win32':
+            self.isroot = checkadmin()
+
         self.configuration = ppds.config.Configuration(self.mode,
                                                        self.isroot, self.args)
         self.run()
