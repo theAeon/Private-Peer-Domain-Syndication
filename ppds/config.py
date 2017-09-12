@@ -48,6 +48,11 @@ class Configuration:
         self.autoconfig()
         if not os.path.exists(self.datafolder):
             if mode == 'cli':
+                if isroot and "--f" not in args:
+                    print('''
+Please run as a non-root user to generate user files
+Use --f to override''')
+                    sys.exit(1)
                 print("Writing default data directory...")
                 print("Creating default configration file...")
             os.makedirs(self.datafolder)
