@@ -7,8 +7,7 @@ class HostPatch:
     '''functions for patching ppds to the host file'''
     def __init__(self, configuration):
         '''copy relevant vars from configuration'''
-        self.location = (
-                         configuration.patchlocation)
+        self.location = (configuration.patchlocation)
         self.hostlocation = configuration.hostfile  # may error on windows
         self.repoobjectdict = configuration.repoobjectdict
         self.hostentries = []
