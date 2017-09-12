@@ -33,6 +33,4 @@ I've only tested this against Python 3.6, but there's no reason it wouldn't work
 
 DOES NOT WORK ON PYTHON 2
 
-CURRENTLY DOES NOT WORK ON WINDOWS
-
 run setup.py install or setup.py build bdist_wheel and install with pip
