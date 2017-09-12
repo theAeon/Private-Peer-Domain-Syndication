@@ -37,13 +37,11 @@ class Configuration:
         DO NOT CHANGE THIS FILE UNLESS YOU ABSOLUTELY KNOW WHAT YOU'RE DOING
         """
         self.repositories = []
-        self.platform = ''
         self.hostfile = ''
         self.defaultdomain = 'repo.ppds.me'
         self.repoobjectdict = {}
         self.repopriority = {}
-        self.datafolder = ''
-        self.patchlocation = '%s/hosts.patch' % self.datafolder
+        self.datafolder = None
         self.__dict__ = self.__dict__
         self.autoconfig()
         if not os.path.exists(self.datafolder):
@@ -55,6 +53,7 @@ Use --f to override''')
                     sys.exit(1)
                 print("Writing default data directory...")
                 print("Creating default configration file...")
+                self.patchlocation = '%s/hosts.patch' % self.datafolder
             os.makedirs(self.datafolder)
             self.save(mode, isroot, args)
             self.makerepofolders(isroot, args)
@@ -67,13 +66,13 @@ Use --f to override''')
     def autoconfig(self):
         '''detect platform and hosts file location (windows may be wrong
         append default repo (repo.ppds.me)(pls no stealerino my domainerino)'''
-        if sys.platform == 'darwin' or 'linux':
+        if sys.platform == 'darwin' or sys.platform == 'linux':
             self.hostfile = '/etc/'
             self.datafolder = '%s/.config/ppds' % os.getenv("HOME")
         elif sys.platform == 'win32':
-            root = os.path.expandvars("%SystemRoot%")
+            root = os.getenv("systemroot")
             self.hostfile = root + "\\System32\\drivers\\etc\\"
-            home = os.path.expandvars("%AppData%")
+            home = os.getenv('appdata')
             self.datafolder = home + "\\ppds"
             # self.hostfile = '%\SystemRoot%\\System32\\drivers\\etc\\'
         else:
