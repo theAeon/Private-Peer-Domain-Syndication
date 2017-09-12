@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ppds',
-    version='0.0.1.dev1',
+    version='0.0.1.dev2',
 
     description='Private Peer Domain Syndication',
     long_description='''
@@ -37,8 +37,6 @@ Building/Running:
 I've only tested this against Python 3.6, but there's no reason it wouldn't work on earlier versions.
 
 DOES NOT WORK ON PYTHON 2
-
-CURRENTLY DOES NOT WORK ON WINDOWS
 
 run setup.py install or setup.py build bdist_wheel and install with pip
 ''',
