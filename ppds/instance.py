@@ -71,6 +71,7 @@ USAGE:
 --patch:      patches the hosts file of the computer (must be root)
 --unpatch:    removes any patches created by ppds (must be root)
 --list        lists all repositories and packages
+--remove      remove a repository from config
 --help:       prints this message
 """
         Instance.__init__(self, args, mode)
@@ -163,7 +164,6 @@ files with value enable/disable)
             self.configuration.repoobjectdict[item].loadpackagelist()
             for package in self.configuration.repoobjectdict[item].packages:
                 print('- ' + package + ' -- ' + self.configuration.repoobjectdict[item].packages[package])
-                print(self.configuration.repoobjectdict[item].packages[package])
         self.configuration.unloadrepolist()
     def removerepo(self):
         '''remove a repo and it's respective folders'''
