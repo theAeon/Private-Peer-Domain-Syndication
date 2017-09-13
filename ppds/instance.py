@@ -2,6 +2,7 @@
 import os
 import ctypes
 import sys
+import shutil
 import ppds.config
 import ppds.hostfilepatch
 PERMERROR = '''
@@ -164,6 +165,12 @@ files with value enable/disable)
                 print('- ' + package + ' -- ' + self.configuration.repoobjectdict[item].packages[package])
                 print(self.configuration.repoobjectdict[item].packages[package])
         self.configuration.unloadrepolist()
+    def removerepo(self):
+        '''remove a repo and it's respective folders'''
+        repo = str(input('Repository to remove: '))
+        self.configuration.repositories.remove(repo)
+        shutil.rmtree(self.configuration.datafolder + '/repos/' + repo)
+        self.configuration.save(self.mode, self.isroot, self.args)
     def printhelp(self):
         ''' prints help message'''
         print(self.helpmessage)
@@ -181,5 +188,7 @@ files with value enable/disable)
             self.unpatch()
         elif "--list" in self.args:
             self.listrepo()
+        elif "--remove" in self.args:
+            self.removerepo()
         else:
             self.printhelp()
