@@ -69,6 +69,7 @@ USAGE:
 --forceadd:   adds repository to config without status check
 --patch:      patches the hosts file of the computer (must be root)
 --unpatch:    removes any patches created by ppds (must be root)
+--list        lists all repositories and packages
 --help:       prints this message
 """
         Instance.__init__(self, args, mode)
@@ -152,7 +153,17 @@ files with value enable/disable)
             else:
                 print("No hostsfile backup.")
                 sys.exit(1)
-
+    def listrepo(self):
+        ''' lists all repos with enabled packages '''
+        self.configuration.initrepolist()
+        for item in self.configuration.repoobjectdict:
+            print('\n')
+            print(item)
+            self.configuration.repoobjectdict[item].loadpackagelist()
+            for package in self.configuration.repoobjectdict[item].packages:
+                print('- ' + package + ' -- ' + self.configuration.repoobjectdict[item].packages[package])
+                print(self.configuration.repoobjectdict[item].packages[package])
+        self.configuration.unloadrepolist()
     def printhelp(self):
         ''' prints help message'''
         print(self.helpmessage)
@@ -168,5 +179,7 @@ files with value enable/disable)
             self.patch()
         elif "--unpatch" in self.args:
             self.unpatch()
+        elif "--list" in self.args:
+            self.listrepo()
         else:
             self.printhelp()
