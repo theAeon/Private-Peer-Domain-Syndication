@@ -168,13 +168,14 @@ files with value enable/disable)
     def removerepo(self):
         '''remove a repo and it's respective folders'''
         repo = str(input('Repository to remove: '))
-        self.configuration.repositories.remove(repo)
-        shutil.rmtree(self.configuration.datafolder + '/repos/' + repo)
-        self.configuration.save(self.mode, self.isroot, self.args)
+        if self.configuration.removerepo(repo) != 'repo does not exist':
+            self.configuration.save(self.mode, self.isroot, self.args)
+        else:
+            print("No repository with that name")
+            sys.exit(1)
     def printhelp(self):
         ''' prints help message'''
         print(self.helpmessage)
-
     def main(self):
         if "--version" in self.args:
             self.version()
