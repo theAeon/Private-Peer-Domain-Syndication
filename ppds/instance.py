@@ -2,7 +2,6 @@
 import os
 import ctypes
 import sys
-import shutil
 import ppds.config
 import ppds.hostfilepatch
 PERMERROR = '''
@@ -72,6 +71,8 @@ USAGE:
 --unpatch:    removes any patches created by ppds (must be root)
 --list        lists all repositories and packages
 --remove      remove a repository from config
+--enable      enables package in a repository
+--disable     disables package in a repository
 --help:       prints this message
 """
         Instance.__init__(self, args, mode)
@@ -163,8 +164,11 @@ files with value enable/disable)
             print(item)
             self.configuration.repoobjectdict[item].loadpackagelist()
             for package in self.configuration.repoobjectdict[item].packages:
-                print('- ' + package + ' -- ' + self.configuration.repoobjectdict[item].packages[package])
+                print(
+                    '- ' + package +
+                    ' -- ' + self.configuration.repoobjectdict[item].packages[package])
         self.configuration.unloadrepolist()
+        print('\n')
     def removerepo(self):
         '''remove a repo and it's respective folders'''
         repo = str(input('Repository to remove: '))
@@ -173,6 +177,24 @@ files with value enable/disable)
         else:
             print("No repository with that name")
             sys.exit(1)
+    def switchpackage(self, onoff):
+        '''enable or disable a package'''
+        repo = str(input('Choose a repository: '))
+        self.configuration.initrepolist()
+        if repo not in self.configuration.repositories:
+            print("No repository with that name")
+            sys.exit(1)
+        self.configuration.repoobjectdict[repo].loadpackagelist()
+        package = str(input('Choose a package: '))
+        if package not in self.configuration.repoobjectdict[repo].packages:
+            print("No package with that name")
+            sys.exit(1)
+        if onoff == 'enable':
+            self.configuration.repoobjectdict[repo].enablepackage(package)
+        elif onoff == 'disable':
+            self.configuration.repoobjectdict[repo].disablepackage(package)
+        self.configuration.repoobjectdict[repo].savepackagelist()
+
     def printhelp(self):
         ''' prints help message'''
         print(self.helpmessage)
@@ -191,5 +213,9 @@ files with value enable/disable)
             self.listrepo()
         elif "--remove" in self.args:
             self.removerepo()
+        elif "--enable" in self.args:
+            self.switchpackage('enable')
+        elif "--disable" in self.args:
+            self.switchpackage('disable')
         else:
             self.printhelp()
