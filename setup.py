@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ppds',
-    version='0.0.1.dev2',
+    version='0.0.1.dev3',
 
     description='Private Peer Domain Syndication',
     long_description='''

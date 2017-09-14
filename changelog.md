@@ -1,3 +1,15 @@
+### 0.0.1dev3
+
+2017-9-14
+
+## ADDED
+~Repository Removal
+
+~Enabling/Disabling Packages
+
+~Listing Repositories and Packages
+
+
 ### 0.0.1dev2
 
 2017-9-12
