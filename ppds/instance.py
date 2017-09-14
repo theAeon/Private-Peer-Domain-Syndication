@@ -193,7 +193,7 @@ files with value enable/disable)
             self.configuration.repoobjectdict[repo].enablepackage(package)
         elif onoff == 'disable':
             self.configuration.repoobjectdict[repo].disablepackage(package)
-        self.configuration.repoobjectdict[repo].savepackagelist()
+        self.configuration.repoobjectdict[repo].savepackagelist(self.isroot, self.args)
 
     def printhelp(self):
         ''' prints help message'''

@@ -2,7 +2,7 @@
 
 import json
 import os
-
+import sys
 
 class Repository:
     ''' contains function for managing a repository entry'''
@@ -31,8 +31,13 @@ class Repository:
         ''' disables package'''
         self.packages[package] = 'disabled'
 
-    def savepackagelist(self):
+    def savepackagelist(self, isroot, args):
         '''writes package to file'''
+        if isroot and '--f' not in args:
+            print('''
+Please run as a non-root user to generate user files
+Use --f to override''')
+            sys.exit(1)
         if os.path.isfile('%s/repos/%s/ppdslist.json' %
                           (self.datafolder, self.name)):
             check = str(input('Overwrite ppdslist? (y/n): '))
