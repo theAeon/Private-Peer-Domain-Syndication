@@ -4,6 +4,7 @@
 
 ## ADDED
 ~Windows Support!
+
 ~Squashed some bugs
 
 
@@ -14,8 +15,10 @@
 ## ADDED
 
 -ppds now stores files in ~/.config/ppds
+
 -ppds now makes sure that these files are not generated/overwritten as root
 unless needed
+
 ### 0.0.1dev0
 2017-03-19
 
