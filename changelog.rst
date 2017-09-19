@@ -1,37 +1,45 @@
-### 0.0.1dev3
+0.0.1dev3
+~~~~~~~~~
 
 2017-9-14
 
-## ADDED
+ADDED
+-----
+
 ~Repository Removal
 
 ~Enabling/Disabling Packages
 
 ~Listing Repositories and Packages
 
-
-### 0.0.1dev2
+0.0.1dev2
+~~~~~~~~~
 
 2017-9-12
 
-## ADDED
+ADDED
+-----
+
 ~Windows Support!
 
 ~Squashed some bugs
 
-
-### 0.0.1dev1
+0.0.1dev1
+~~~~~~~~~
 
 2017-03-19
 
-## ADDED
+ADDED
+-----
 
 -ppds now stores files in ~/.config/ppds
 
--ppds now makes sure that these files are not generated/overwritten as root
-unless needed
+-ppds now makes sure that these files are not generated/overwritten as
+root unless needed
 
-### 0.0.1dev0
+0.0.1dev0
+~~~~~~~~~
+
 2017-03-19
 
 initial super buggy code release
